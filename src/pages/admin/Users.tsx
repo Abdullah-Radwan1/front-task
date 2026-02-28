@@ -1,13 +1,21 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TablePagination } from '@/components/TablePagination';
 import { api } from '@/lib/mock-data';
+
+const PAGE_SIZE = 4;
 
 export default function AdminUsers() {
   const { t } = useTranslation();
+  const [page, setPage] = useState(1);
   const { data, isLoading } = useQuery({ queryKey: ['admin-users'], queryFn: api.getUsers });
+
+  const totalPages = data ? Math.ceil(data.length / PAGE_SIZE) : 1;
+  const paginated = data?.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE) || [];
 
   return (
     <div>
@@ -25,14 +33,14 @@ export default function AdminUsers() {
           </TableHeader>
           <TableBody>
             {isLoading
-              ? Array.from({ length: 5 }).map((_, i) => (
+              ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
                   <TableRow key={i}>
                     {Array.from({ length: 5 }).map((_, j) => (
                       <TableCell key={j}><Skeleton className="h-4 w-20" /></TableCell>
                     ))}
                   </TableRow>
                 ))
-              : data?.map((user) => (
+              : paginated.map((user) => (
                   <TableRow key={user.id}>
                     <TableCell className="font-medium">{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
@@ -52,6 +60,7 @@ export default function AdminUsers() {
           </TableBody>
         </Table>
       </div>
+      <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { RequireAuth } from "@/components/RequireAuth";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import Index from "./pages/Index";
+import ProductsPage from "./pages/Products";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -26,6 +27,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/products" element={<ProductsPage />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route
               path="/admin"
