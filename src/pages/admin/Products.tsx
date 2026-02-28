@@ -16,7 +16,10 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import { TablePagination } from '@/components/TablePagination';
 import { api, type Product } from '@/lib/mock-data';
+
+const PAGE_SIZE = 5;
 
 const productSchema = z.object({
   name: z.string().min(1),
@@ -34,10 +37,7 @@ export default function AdminProducts() {
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const searchQ = searchParams.get('q') || '';
-  const sortCol = searchParams.get('sort') || 'name';
-  const sortDir = searchParams.get('dir') || 'asc';
+  const [page, setPage] = useState(1);
 
   const { data: allProducts, isLoading } = useQuery({
     queryKey: ['admin-products'],
@@ -65,6 +65,10 @@ export default function AdminProducts() {
     setDialogOpen(false);
   };
 
+  const searchQ = searchParams.get('q') || '';
+  const sortCol = searchParams.get('sort') || 'name';
+  const sortDir = searchParams.get('dir') || 'asc';
+
   let filtered = allProducts?.products || [];
   if (searchQ) {
     const q = searchQ.toLowerCase();
@@ -77,6 +81,9 @@ export default function AdminProducts() {
     if (sortCol === 'stock') return (a.stock - b.stock) * dir;
     return a.name.localeCompare(b.name) * dir;
   });
+
+  const totalPages = Math.ceil(sorted.length / PAGE_SIZE);
+  const paginated = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const toggleSort = (col: string) => {
     const next = new URLSearchParams(searchParams);
@@ -140,7 +147,7 @@ export default function AdminProducts() {
                 </TableRow>
               ))
             ) : (
-              sorted.map((product) => (
+              paginated.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell className="font-medium">{product.name}</TableCell>
                   <TableCell>
@@ -164,8 +171,8 @@ export default function AdminProducts() {
           </TableBody>
         </Table>
       </div>
+      <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
 
-      {/* Add/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>

@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TablePagination } from '@/components/TablePagination';
 import { api } from '@/lib/mock-data';
+
+const PAGE_SIZE = 4;
 
 const statusVariant = {
   completed: 'default' as const,
@@ -14,7 +17,11 @@ const statusVariant = {
 
 export default function AdminOrders() {
   const { t } = useTranslation();
+  const [page, setPage] = useState(1);
   const { data, isLoading } = useQuery({ queryKey: ['admin-orders'], queryFn: api.getOrders });
+
+  const totalPages = data ? Math.ceil(data.length / PAGE_SIZE) : 1;
+  const paginated = data?.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE) || [];
 
   return (
     <div>
@@ -32,14 +39,14 @@ export default function AdminOrders() {
           </TableHeader>
           <TableBody>
             {isLoading
-              ? Array.from({ length: 5 }).map((_, i) => (
+              ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
                   <TableRow key={i}>
                     {Array.from({ length: 5 }).map((_, j) => (
                       <TableCell key={j}><Skeleton className="h-4 w-20" /></TableCell>
                     ))}
                   </TableRow>
                 ))
-              : data?.map((order) => (
+              : paginated.map((order) => (
                   <TableRow key={order.id}>
                     <TableCell className="font-mono text-sm">{order.id}</TableCell>
                     <TableCell>{order.customer}</TableCell>
@@ -55,6 +62,7 @@ export default function AdminOrders() {
           </TableBody>
         </Table>
       </div>
+      <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

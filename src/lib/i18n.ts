@@ -30,6 +30,11 @@ const resources = {
         addToCart: 'Add to Cart',
         added: 'Added!',
         noResults: 'No products found',
+        filters: 'Filters',
+        clearFilters: 'Clear',
+        priceRange: 'Price Range',
+        inStockOnly: 'In Stock Only',
+        browseAll: 'Browse our complete collection',
       },
       cart: {
         title: 'Shopping Cart',
@@ -121,6 +126,11 @@ const resources = {
         addToCart: 'أضف إلى السلة',
         added: 'تمت الإضافة!',
         noResults: 'لم يتم العثور على منتجات',
+        filters: 'الفلاتر',
+        clearFilters: 'مسح',
+        priceRange: 'نطاق السعر',
+        inStockOnly: 'المتوفر فقط',
+        browseAll: 'تصفح مجموعتنا الكاملة',
       },
       cart: {
         title: 'سلة التسوق',
