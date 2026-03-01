@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +6,7 @@
 
 @layer base {
   :root {
+    /* Refined Light Palette - Better contrast for readability */
     --background: 40 20% 98%;
     --foreground: 220 50% 10%;
 
@@ -15,6 +16,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 50% 10%;
 
+    /* Deep Navy for Professionalism */
     --primary: 220 60% 18%;
     --primary-foreground: 40 30% 96%;
 
@@ -24,18 +26,20 @@
     --muted: 40 15% 94%;
     --muted-foreground: 220 15% 45%;
 
+    /* Vivid Accent for CTAs */
     --accent: 35 85% 52%;
     --accent-foreground: 220 60% 10%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 35 20% 88%;
     --input: 35 20% 88%;
     --ring: 35 85% 52%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem; /* Slightly softer modern corners */
 
+    /* Sidebar - Refined spacing */
     --sidebar-background: 40 20% 97%;
     --sidebar-foreground: 220 50% 15%;
     --sidebar-primary: 220 60% 18%;
@@ -47,91 +51,94 @@
 
     --success: 152 60% 40%;
     --success-foreground: 0 0% 100%;
-
-    --chart-1: 35 85% 52%;
-    --chart-2: 220 60% 18%;
-    --chart-3: 152 60% 40%;
-    --chart-4: 0 72% 51%;
-    --chart-5: 280 60% 50%;
   }
 
   .dark {
-    --background: 222 30% 8%;
-    --foreground: 40 15% 92%;
+    /* True Dark Mode - Optimized for OLED and low-strain */
+    --background: 222 47% 4%; /* Slightly deeper than original */
+    --foreground: 40 15% 94%;
 
-    --card: 222 25% 12%;
-    --card-foreground: 40 15% 92%;
+    --card: 222 30% 8%;
+    --card-foreground: 40 15% 94%;
 
-    --popover: 222 25% 12%;
-    --popover-foreground: 40 15% 92%;
+    --popover: 222 30% 8%;
+    --popover-foreground: 40 15% 94%;
 
+    /* Swap Primary in dark mode to the accent color for better visibility */
     --primary: 35 85% 55%;
-    --primary-foreground: 222 30% 8%;
+    --primary-foreground: 222 47% 4%;
 
-    --secondary: 222 20% 18%;
-    --secondary-foreground: 40 15% 85%;
+    --secondary: 222 20% 14%;
+    --secondary-foreground: 40 15% 90%;
 
-    --muted: 222 20% 16%;
-    --muted-foreground: 220 15% 55%;
+    --muted: 222 20% 12%;
+    --muted-foreground: 215 20% 65%;
 
     --accent: 35 85% 52%;
-    --accent-foreground: 222 30% 8%;
+    --accent-foreground: 222 47% 4%;
 
-    --destructive: 0 62% 45%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 222 20% 20%;
-    --input: 222 20% 20%;
+    --border: 222 20% 18%;
+    --input: 222 20% 18%;
     --ring: 35 85% 52%;
 
-    --sidebar-background: 222 30% 10%;
-    --sidebar-foreground: 40 15% 85%;
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 40 15% 90%;
     --sidebar-primary: 35 85% 55%;
-    --sidebar-primary-foreground: 222 30% 8%;
-    --sidebar-accent: 222 20% 18%;
-    --sidebar-accent-foreground: 40 15% 85%;
-    --sidebar-border: 222 20% 20%;
+    --sidebar-primary-foreground: 222 47% 4%;
+    --sidebar-accent: 222 20% 14%;
+    --sidebar-accent-foreground: 40 15% 90%;
+    --sidebar-border: 222 20% 18%;
     --sidebar-ring: 35 85% 52%;
-
-    --success: 152 60% 45%;
-    --success-foreground: 0 0% 100%;
-
-    --chart-1: 35 85% 55%;
-    --chart-2: 210 60% 60%;
-    --chart-3: 152 60% 45%;
-    --chart-4: 0 62% 45%;
-    --chart-5: 280 60% 55%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border ring-offset-background;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1; /* Better typography rendering */
+    min-height: 100dvh; /* Dynamic viewport height fix */
   }
 
-  html[dir="rtl"] {
-    direction: rtl;
+  /* Focus styles for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2;
   }
 }
 
 @layer utilities {
   .font-display {
-    font-family: 'Playfair Display', serif;
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
   }
 
   .font-sans {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-primary via-primary to-accent;
   }
 
+  /* Optimized Glassmorphism */
   .glass {
-    @apply bg-background/80 backdrop-blur-md border border-border/50;
+    @apply bg-background/60 backdrop-blur-lg border border-border/40 shadow-sm;
+  }
+
+  /* Layout Helper */
+  .section-padding {
+    @apply py-12 md:py-24 lg:py-32;
   }
 }

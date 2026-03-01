@@ -1,8 +1,9 @@
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import heroImage from '@/assets/hero-image.jpg';
+import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import heroImage from "@/assets/hero-image.jpg";
+import { Link } from "react-router-dom";
 
 export function HeroSection() {
   const { t } = useTranslation();
@@ -32,22 +33,23 @@ export function HeroSection() {
             className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-medium text-muted-foreground mb-6 bg-background/50 backdrop-blur"
           >
             <Sparkles className="h-3 w-3 text-accent" />
-            {t('hero.secondary')}
+            {t("hero.secondary")}
           </motion.div>
 
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-4">
-            {t('hero.title')}
+            {t("hero.title")}
           </h1>
-          <p className="text-lg text-muted-foreground mb-8 max-w-md">
-            {t('hero.subtitle')}
+          <p className="text-lg font-semibold mb-8 max-w-md">
+            {t("hero.subtitle")}
           </p>
 
-          <div className="flex flex-wrap gap-4">
-            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 gap-2 font-semibold">
-              {t('hero.cta')}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
+          <Button
+            size="lg"
+            className=" flex bg-accent text-accent-foreground hover:bg-accent/90 gap-2 font-semibold"
+          >
+            <Link to={"/products"}>{t("hero.cta")}</Link>
+            <ArrowRight className="h-4 w-4" />
+          </Button>
         </motion.div>
       </div>
     </section>
