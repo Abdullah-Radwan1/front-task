@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
@@ -18,16 +18,7 @@ import {
 } from "@/components/ui/card";
 import { useAuthStore } from "@/stores/auth-store";
 import { useTheme } from "@/components/ThemeProvider";
-import {
-  Sun,
-  Moon,
-  Globe,
-  ArrowLeft,
-  Mail,
-  Lock,
-  LogIn,
-  User,
-} from "lucide-react";
+import { Sun, Moon, Globe, ArrowLeft, Mail, Lock, LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const schema = z.object({
@@ -37,12 +28,23 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function AdminLogin() {
+export default function UserLogin() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
+  const user = useAuthStore((s) => s.user);
   const { theme, toggle } = useTheme();
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [user, navigate]);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -51,16 +53,16 @@ export default function AdminLogin() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { email: "admin@luxe.com", password: "admin123" },
+    defaultValues: { email: "", password: "" },
   });
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     setError("");
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((r) => setTimeout(r, 500));
     login(data.email, data.password)
-      ? navigate("/admin")
-      : setError("Invalid credentials");
+      ? navigate("/")
+      : setError(t("user.invalidCredentials"));
     setIsLoading(false);
   };
 
@@ -74,7 +76,7 @@ export default function AdminLogin() {
   const InputField = ({ id, type, icon: Icon, placeholder, error }: any) => (
     <div className="space-y-2">
       <Label htmlFor={id} className="text-sm font-medium">
-        {t(`admin.${id}`)}
+        {t(`user.${id}`)}
       </Label>
       <div className="relative">
         <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -135,25 +137,16 @@ export default function AdminLogin() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md relative"
       >
-        <div className="absolute -top-3 -left-3 w-12 h-12 border-t-2 border-l-2 border-accent/30 rounded-tl-lg" />
-        <div className="absolute -bottom-3 -right-3 w-12 h-12 border-b-2 border-r-2 border-accent/30 rounded-br-lg" />
-
         <Card className="border-2 shadow-xl bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <CardHeader className="text-center space-y-4 pb-8">
-            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }}>
-              <p className="font-display text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                LUXE
-              </p>
-              <div className="w-16 h-1 bg-accent/30 mx-auto mt-4 rounded-full" />
-            </motion.div>
-            <div className="space-y-2">
-              <CardTitle className="text-2xl font-display">
-                {t("admin.welcomeBack")}
-              </CardTitle>
-              <CardDescription>
-                Enter your credentials to access the admin panel
-              </CardDescription>
-            </div>
+            <p className="font-display text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              LUXE
+            </p>
+            <div className="w-16 h-1 bg-accent/30 mx-auto mt-4 rounded-full" />
+            <CardTitle className="text-2xl font-display">
+              {t("user.login")}
+            </CardTitle>
+            <CardDescription>{t("user.enterCredentials")}</CardDescription>
           </CardHeader>
 
           <CardContent>
@@ -162,7 +155,7 @@ export default function AdminLogin() {
                 id="email"
                 type="email"
                 icon={Mail}
-                placeholder="admin@luxe.com"
+                placeholder="you@example.com"
                 error={errors.email}
               />
               <InputField
@@ -199,32 +192,22 @@ export default function AdminLogin() {
                 ) : (
                   <LogIn className="h-4 w-4 mr-2" />
                 )}
-                {isLoading ? "Signing in..." : t("admin.signIn")}
+                {isLoading ? t("user.signingIn") : t("user.signIn")}
               </Button>
             </form>
           </CardContent>
 
           <CardFooter className="flex flex-col gap-3 pt-6 border-t">
-            <div className="text-xs text-muted-foreground text-center space-y-1">
-              <p
-                className="mb-2
-              "
-              >
-                Demo credentials
-              </p>
-              <code className="bg-muted px-2 py-1 rounded text-accent">
-                admin@luxe.com / admin123
-              </code>
-            </div>
-            <p dir="ltr" className="text-xs text-muted-foreground text-center">
-              {t(`admin.rights`)}
+            <p className="text-xs text-muted-foreground text-center">
+              {t("user.noAccount")}{" "}
+              <a href="/register" className="text-accent">
+                {t("user.register")}
+              </a>
             </p>
-            <Link
-              to={"/login"}
-              className="text-xs text-accent underline text-center flex items-center gap-1"
-            >
-              Customers login <User size={14} />
-            </Link>
+            <p className="text-xs text-accent text-center underline flex items-center gap-1">
+              <Link to="/admin/login">{t("user.adminLogin")}</Link>{" "}
+              <Lock size={12} />
+            </p>
           </CardFooter>
         </Card>
       </motion.div>

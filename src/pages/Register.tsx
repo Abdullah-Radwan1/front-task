@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -25,24 +25,43 @@ import {
   ArrowLeft,
   Mail,
   Lock,
-  LogIn,
-  User,
+  UserPlus,
 } from "lucide-react";
+// import { api } from "@/lib/mock-data";  // no longer used, store handles registration
 import { cn } from "@/lib/utils";
 
-const schema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
-});
+const schema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirm: z.string(),
+  })
+  .refine((data) => data.password === data.confirm, {
+    message: "Passwords do not match",
+    path: ["confirm"],
+  });
 
 type FormData = z.infer<typeof schema>;
 
-export default function AdminLogin() {
+export default function Register() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
+  const registerUser = useAuthStore((s) => s.register);
+  const user = useAuthStore((s) => s.user);
   const { theme, toggle } = useTheme();
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [user, navigate]);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -51,16 +70,22 @@ export default function AdminLogin() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { email: "admin@luxe.com", password: "admin123" },
+    // VALIDATION STRATEGY FIX:
+    mode: "onBlur", // Validates when the user leaves an input
+    reValidateMode: "onBlur",
   });
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     setError("");
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    login(data.email, data.password)
-      ? navigate("/admin")
-      : setError("Invalid credentials");
+    // use the auth store which already pushes into the shared users array
+    const ok = registerUser(data.name, data.email, data.password);
+    if (ok) {
+      // after registering, the store already logged the user in
+      navigate("/");
+    } else {
+      setError(t("user.emailInUse"));
+    }
     setIsLoading(false);
   };
 
@@ -74,7 +99,7 @@ export default function AdminLogin() {
   const InputField = ({ id, type, icon: Icon, placeholder, error }: any) => (
     <div className="space-y-2">
       <Label htmlFor={id} className="text-sm font-medium">
-        {t(`admin.${id}`)}
+        {t(`user.${id}`)}
       </Label>
       <div className="relative">
         <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -135,34 +160,32 @@ export default function AdminLogin() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md relative"
       >
-        <div className="absolute -top-3 -left-3 w-12 h-12 border-t-2 border-l-2 border-accent/30 rounded-tl-lg" />
-        <div className="absolute -bottom-3 -right-3 w-12 h-12 border-b-2 border-r-2 border-accent/30 rounded-br-lg" />
-
         <Card className="border-2 shadow-xl bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <CardHeader className="text-center space-y-4 pb-8">
-            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }}>
-              <p className="font-display text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                LUXE
-              </p>
-              <div className="w-16 h-1 bg-accent/30 mx-auto mt-4 rounded-full" />
-            </motion.div>
-            <div className="space-y-2">
-              <CardTitle className="text-2xl font-display">
-                {t("admin.welcomeBack")}
-              </CardTitle>
-              <CardDescription>
-                Enter your credentials to access the admin panel
-              </CardDescription>
-            </div>
+            <p className="font-display text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              LUXE
+            </p>
+            <div className="w-16 h-1 bg-accent/30 mx-auto mt-4 rounded-full" />
+            <CardTitle className="text-2xl font-display">
+              {t("user.register")}
+            </CardTitle>
+            <CardDescription>{t("user.createAccount")}</CardDescription>
           </CardHeader>
 
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <InputField
+                id="name"
+                type="text"
+                icon={UserPlus}
+                placeholder="Your name"
+                error={errors.name}
+              />
+              <InputField
                 id="email"
                 type="email"
                 icon={Mail}
-                placeholder="admin@luxe.com"
+                placeholder="you@example.com"
                 error={errors.email}
               />
               <InputField
@@ -171,6 +194,13 @@ export default function AdminLogin() {
                 icon={Lock}
                 placeholder="••••••••"
                 error={errors.password}
+              />
+              <InputField
+                id="confirm"
+                type="password"
+                icon={Lock}
+                placeholder="••••••••"
+                error={errors.confirm}
               />
 
               {error && (
@@ -194,37 +224,28 @@ export default function AdminLogin() {
                     transition={{ duration: 1, repeat: Infinity }}
                     className="mr-2"
                   >
-                    <LogIn className="h-4 w-4" />
+                    <UserPlus className="h-4 w-4" />
                   </motion.div>
                 ) : (
-                  <LogIn className="h-4 w-4 mr-2" />
+                  <UserPlus className="h-4 w-4 mr-2" />
                 )}
-                {isLoading ? "Signing in..." : t("admin.signIn")}
+                {isLoading ? t("user.creating") : t("user.createAccount")}
               </Button>
             </form>
           </CardContent>
 
           <CardFooter className="flex flex-col gap-3 pt-6 border-t">
-            <div className="text-xs text-muted-foreground text-center space-y-1">
-              <p
-                className="mb-2
-              "
-              >
-                Demo credentials
-              </p>
-              <code className="bg-muted px-2 py-1 rounded text-accent">
-                admin@luxe.com / admin123
-              </code>
-            </div>
-            <p dir="ltr" className="text-xs text-muted-foreground text-center">
-              {t(`admin.rights`)}
+            <p className="text-xs text-muted-foreground text-center">
+              {t("user.haveAccount")}{" "}
+              <a href="/login" className="text-accent">
+                {t("user.login")}
+              </a>
             </p>
-            <Link
-              to={"/login"}
-              className="text-xs text-accent underline text-center flex items-center gap-1"
-            >
-              Customers login <User size={14} />
-            </Link>
+            <p className="text-xs text-muted-foreground text-center">
+              <a href="/admin/login" className="text-accent">
+                {t("user.adminLogin")}
+              </a>
+            </p>
           </CardFooter>
         </Card>
       </motion.div>

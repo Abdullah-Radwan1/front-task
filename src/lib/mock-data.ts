@@ -1,7 +1,12 @@
 export interface Product {
   id: string;
-  name: string;
-  description: string;
+  // bilingual fields
+  name: string; // legacy — kept as English default
+  name_en: string;
+  name_ar: string;
+  description: string; // legacy — kept as English default
+  description_en: string;
+  description_ar: string;
   price: number;
   category: "watches" | "leather" | "accessories" | "jewelry";
   image: string;
@@ -25,6 +30,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  password: string; // stored in cleartext for mock purposes
   role: "admin" | "customer";
   status: "active" | "inactive";
   joinedAt: string;
@@ -49,7 +55,11 @@ export const products: Product[] = [
   {
     id: "1",
     name: "Chronograph Elite",
+    name_en: "Chronograph Elite",
+    name_ar: "كرونوغراف إيليت",
     description: "Swiss-made  chronograph with sapphire crystal",
+    description_en: "Swiss-made chronograph with sapphire crystal",
+    description_ar: "كرونوغراف سويسري مع زجاج ياقوتي",
     price: 2499,
     category: "watches",
     image: productImages[0],
@@ -62,7 +72,11 @@ export const products: Product[] = [
   {
     id: "2",
     name: "Heritage Diver",
+    name_en: "Heritage Diver",
+    name_ar: "هيريتاج دايفر",
     description: "Water-resistant to 300m with ceramic bezel",
+    description_en: "Water-resistant to 300m with ceramic bezel",
+    description_ar: "مقاوم للماء حتى 300م مع إطار سيراميكي",
     price: 1899,
     category: "watches",
     image: productImages[1],
@@ -75,7 +89,11 @@ export const products: Product[] = [
   {
     id: "3",
     name: "Milano Briefcase",
+    name_en: "Milano Briefcase",
+    name_ar: "حقيبة ميلانو",
     description: "Full-grain Italian leather with brass hardware",
+    description_en: "Full-grain Italian leather with brass hardware",
+    description_ar: "جلد إيطالي عالي الجودة مع تركيبات من النحاس",
     price: 890,
     category: "leather",
     image: productImages[2],
@@ -88,7 +106,11 @@ export const products: Product[] = [
   {
     id: "4",
     name: "Voyager Duffle",
+    name_en: "Voyager Duffle",
+    name_ar: "حقيبة السفر فوجير",
     description: "Hand-stitched travel bag in vegetable-tanned leather",
+    description_en: "Hand-stitched travel bag in vegetable-tanned leather",
+    description_ar: "حقيبة سفر مخيطة يدويًا من جلد نباتي مدبوغ",
     price: 1250,
     category: "leather",
     image: productImages[3],
@@ -101,7 +123,11 @@ export const products: Product[] = [
   {
     id: "5",
     name: "Onyx Cufflinks",
+    name_en: "Onyx Cufflinks",
+    name_ar: "أزرار أكمام من العقيق الأسود",
     description: "Sterling silver cufflinks with black onyx stones",
+    description_en: "Sterling silver cufflinks with black onyx stones",
+    description_ar: "أزرار أكمام من الفضة الإسترلينية مع أحجار العقيق الأسود",
     price: 320,
     category: "accessories",
     image: productImages[4],
@@ -114,7 +140,11 @@ export const products: Product[] = [
   {
     id: "6",
     name: "Gold Chain Necklace",
+    name_en: "Gold Chain Necklace",
+    name_ar: "سلسلة ذهبية",
     description: "18K gold-plated Cuban link chain",
+    description_en: "18K gold-plated Cuban link chain",
+    description_ar: "سلسلة كوبيان مطلية بالذهب عيار 18",
     price: 450,
     category: "jewelry",
     image: productImages[5],
@@ -127,7 +157,11 @@ export const products: Product[] = [
   {
     id: "7",
     name: "Signet Ring",
+    name_en: "Signet Ring",
+    name_ar: "خاتم خاتم",
     description: "Hand-engraved sterling silver signet ring",
+    description_en: "Hand-engraved sterling silver signet ring",
+    description_ar: "خاتم خاتم من الفضة الإسترلينية محفور يدويًا",
     price: 280,
     category: "jewelry",
     image: productImages[6],
@@ -140,7 +174,11 @@ export const products: Product[] = [
   {
     id: "8",
     name: "Aviator Sunglasses",
+    name_en: "Aviator Sunglasses",
+    name_ar: "نظارة طيار",
     description: "Titanium frame with polarized lenses",
+    description_en: "Titanium frame with polarized lenses",
+    description_ar: "إطار من التيتانيوم مع عدسات مستقطبة",
     price: 395,
     category: "accessories",
     image: productImages[7],
@@ -153,7 +191,11 @@ export const products: Product[] = [
   {
     id: "9",
     name: "Dress Watch Slim",
+    name_en: "Dress Watch Slim",
+    name_ar: "ساعة رسمية نحيفة",
     description: "Ultra-thin automatic movement, rose gold case",
+    description_en: "Ultra-thin automatic movement, rose gold case",
+    description_ar: "حركة أوتوماتيكية فائقة النحافة، هيكل من الذهب الوردي",
     price: 3200,
     category: "watches",
     image: productImages[8],
@@ -166,7 +208,11 @@ export const products: Product[] = [
   {
     id: "10",
     name: "Leather Card Holder",
+    name_en: "Leather Card Holder",
+    name_ar: "حامل بطاقات جلدي",
     description: "Minimalist card holder in saffiano leather",
+    description_en: "Minimalist card holder in saffiano leather",
+    description_ar: "حامل بطاقات بسيط من جلد سافيانو",
     price: 145,
     category: "leather",
     image: productImages[9],
@@ -179,7 +225,11 @@ export const products: Product[] = [
   {
     id: "11",
     name: "Silk Pocket Square",
+    name_en: "Silk Pocket Square",
+    name_ar: "منديل جيب حريري",
     description: "Hand-rolled Italian silk in paisley print",
+    description_en: "Hand-rolled Italian silk in paisley print",
+    description_ar: "منديل جيب من الحرير الإيطالي بطبعة بيزلي",
     price: 85,
     category: "accessories",
     image: productImages[10],
@@ -192,7 +242,11 @@ export const products: Product[] = [
   {
     id: "12",
     name: "Diamond Stud Earrings",
+    name_en: "Diamond Stud Earrings",
+    name_ar: "أقراط ماسية",
     description: "0.5ct lab-grown diamonds in platinum setting",
+    description_en: "0.5ct lab-grown diamonds in platinum setting",
+    description_ar: "أقراط مرصعة بألماس اصطناعي 0.5 قيراط بإطار من البلاتين",
     price: 1800,
     category: "jewelry",
     image: productImages[11],
@@ -269,6 +323,7 @@ export const users: User[] = [
     id: "USR-001",
     name: "Admin User",
     email: "admin@luxe.com",
+    password: "admin123",
     role: "admin",
     status: "active",
     joinedAt: "2025-01-01",
@@ -277,6 +332,7 @@ export const users: User[] = [
     id: "USR-002",
     name: "James Wilson",
     email: "james@example.com",
+    password: "james123",
     role: "customer",
     status: "active",
     joinedAt: "2025-06-15",
@@ -285,6 +341,7 @@ export const users: User[] = [
     id: "USR-003",
     name: "Sarah Chen",
     email: "sarah@example.com",
+    password: "sarah123",
     role: "customer",
     status: "active",
     joinedAt: "2025-08-20",
@@ -293,6 +350,7 @@ export const users: User[] = [
     id: "USR-004",
     name: "Omar Hassan",
     email: "omar@example.com",
+    password: "omar123",
     role: "customer",
     status: "active",
     joinedAt: "2025-09-10",
@@ -301,6 +359,7 @@ export const users: User[] = [
     id: "USR-005",
     name: "Emily Taylor",
     email: "emily@example.com",
+    password: "emily123",
     role: "customer",
     status: "inactive",
     joinedAt: "2025-03-05",
@@ -309,6 +368,7 @@ export const users: User[] = [
     id: "USR-006",
     name: "Michael Brown",
     email: "michael@example.com",
+    password: "michael123",
     role: "customer",
     status: "active",
     joinedAt: "2025-11-01",
@@ -382,6 +442,34 @@ export const api = {
     return users;
   },
 
+  // registers a new customer and returns the created user
+  registerUser: async (name: string, email: string, password: string) => {
+    await delay();
+    if (users.some((u) => u.email === email)) {
+      throw new Error("Email already in use");
+    }
+    const id = `USR-${String(users.length + 1).padStart(3, "0")}`;
+    const newUser: User = {
+      id,
+      name,
+      email,
+      password,
+      role: "customer",
+      status: "active",
+      joinedAt: new Date().toISOString().split("T")[0],
+    };
+    users.push(newUser);
+    return newUser;
+  },
+
+  // simple authentication check using stored passwords
+  loginUser: async (email: string, password: string) => {
+    await delay();
+    return (
+      users.find((u) => u.email === email && u.password === password) || null
+    );
+  },
+
   getDashboardStats: async () => {
     await delay();
     return {
@@ -392,5 +480,26 @@ export const api = {
       totalProducts: products.length,
       totalUsers: users.length,
     };
+  },
+
+  createOrder: async (
+    customerName: string,
+    email: string,
+    cartItems: Array<{ productId: string; quantity: number; price: number }>,
+    total: number,
+  ) => {
+    await delay();
+    const id = `ORD-${String(orders.length + 1).padStart(3, "0")}`;
+    const newOrder: Order = {
+      id,
+      customer: customerName,
+      email,
+      items: cartItems,
+      total,
+      status: "pending",
+      date: new Date().toISOString().split("T")[0],
+    };
+    orders.push(newOrder);
+    return newOrder;
   },
 };

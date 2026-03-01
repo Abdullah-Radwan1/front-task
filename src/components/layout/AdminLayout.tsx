@@ -120,18 +120,7 @@ export function AdminLayout() {
           ))}
         </nav>
 
-        <div className="space-y-1 pt-4 border-t">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start gap-3"
-            onClick={() => {
-              navigate("/");
-              closeMobileMenu();
-            }}
-          >
-            <ArrowLeft className="h-4 w-4" /> {t("nav.home")}
-          </Button>
+        <div className="space-y-1 pt-4">
           <Button
             variant="ghost"
             size="sm"
@@ -157,7 +146,7 @@ export function AdminLayout() {
           <Button
             variant="ghost"
             size="sm"
-            className="w-full justify-start gap-3 text-destructive hover:text-destructive"
+            className="w-full border-t justify-start gap-3 text-destructive hover:text-destructive"
             onClick={() => {
               logout();
               navigate("/admin/login");

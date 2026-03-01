@@ -1,9 +1,11 @@
-import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '@/stores/auth-store';
-import type { ReactNode } from 'react';
+import { Navigate } from "react-router-dom";
+import { useAuthStore } from "@/stores/auth-store";
+import type { ReactNode } from "react";
 
 export function RequireAuth({ children }: { children: ReactNode }) {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  if (!isAuthenticated) return <Navigate to="/admin/login" replace />;
+  const { user, isAuthenticated } = useAuthStore();
+  if (!isAuthenticated || user?.role !== "admin") {
+    return <Navigate to="/admin/login" replace />;
+  }
   return <>{children}</>;
 }
