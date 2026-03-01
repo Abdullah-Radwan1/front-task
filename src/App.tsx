@@ -8,6 +8,7 @@ import { RequireAuth } from "@/components/RequireAuth";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import Index from "./pages/Index";
 import ProductsPage from "./pages/Products";
+import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -28,6 +29,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/products" element={<ProductsPage />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route
               path="/admin"

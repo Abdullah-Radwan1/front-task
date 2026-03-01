@@ -7,7 +7,7 @@ import { Sparkles, ArrowRight, Star, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function FeaturedCarousel() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: ["featured"],
@@ -39,7 +39,7 @@ export function FeaturedCarousel() {
           >
             <Sparkles className="h-3.5 w-3.5 text-accent" />
             <span className="text-xs font-bold tracking-widest uppercase text-accent">
-              {t("Editor's Choice")}
+              {t("carousel.editorsChoice")}
             </span>
           </motion.div>
 
@@ -49,7 +49,7 @@ export function FeaturedCarousel() {
             viewport={{ once: true }}
             className="font-display text-4xl md:text-6xl font-bold mb-6 tracking-tight text-foreground"
           >
-            This Week's <span className="text-gradient">Featured</span>
+            {t("carousel.thisWeeksFeatured")}
           </motion.h2>
 
           <motion.p
@@ -58,8 +58,7 @@ export function FeaturedCarousel() {
             viewport={{ once: true }}
             className="font-sans text-muted-foreground text-lg leading-relaxed"
           >
-            Hand-selected premium pieces that define luxury and elegance. Each
-            item tells a unique story of craftsmanship.
+            {t("carousel.tagline")}
           </motion.p>
         </div>
 
@@ -92,7 +91,7 @@ export function FeaturedCarousel() {
                     transition: { duration: 0.6, ease: "easeOut" },
                   },
                 }}
-                onClick={() => navigate(`/products/product/${product.id}`)}
+                onClick={() => navigate(`/products/${product.id}`)}
                 className="group relative"
               >
                 {/* Product Card */}
@@ -101,14 +100,16 @@ export function FeaturedCarousel() {
                   <div className="relative aspect-[4/5] overflow-hidden">
                     <img
                       src={product.image}
-                      alt={product.name}
+                      alt={
+                        i18n.language === "ar" ? product.nameAr : product.name
+                      }
                       className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                     />
 
                     {/* Ranking Tag */}
                     <div className="absolute top-4 left-4">
                       <div className="glass px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter text-foreground">
-                        #{index + 1} Best Seller
+                        #{index + 1} {t("carousel.bestSeller")}
                       </div>
                     </div>
 
@@ -123,16 +124,19 @@ export function FeaturedCarousel() {
 
                   {/* Content Area */}
                   <div className="p-8 text-center">
+                    {/** determine language-specific display */}
                     <h3 className="font-display text-2xl font-bold mb-3 transition-colors group-hover:text-primary">
-                      {product.name}
+                      {i18n.language === "ar" ? product.nameAr : product.name}
                     </h3>
                     <p className="text-muted-foreground text-sm line-clamp-2 mb-6 px-2">
-                      {product.description}
+                      {i18n.language === "ar"
+                        ? product.descriptionAr
+                        : product.description}
                     </p>
 
                     <div className="pt-4 border-t border-border/50 flex flex-col items-center gap-1">
                       <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
-                        Starting from
+                        {t("products.startingFrom")}
                       </span>
                       <span className="text-3xl font-display font-bold text-primary">
                         ${product.price}
@@ -161,7 +165,7 @@ export function FeaturedCarousel() {
             onClick={() => navigate("/products")}
             className="group font-sans font-bold text-lg "
           >
-            Explore Full Collection
+            {t("carousel.exploreCollection")}
             <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-2 text-accent" />
           </Button>
         </motion.div>
